@@ -1,0 +1,15 @@
+[submodule "student-service"]
+    path = student-service
+    url = https://github.com/PrabhanjanaSK/student-service.git
+
+[submodule "course-service"]
+    path = course-service
+    url = https://github.com/PrabhanjanaSK/course-service.git
+
+[submodule "enrollment-service"]
+    path = enrollment-service
+    url = https://github.com/PrabhanjanaSK/enrollment-service.git
+
+[submodule "api-gateway"]
+    path = api-gateway
+    url = https://github.com/PrabhanjanaSK/api-gateway.git
