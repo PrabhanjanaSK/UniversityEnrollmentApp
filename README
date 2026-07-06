@@ -1,0 +1,132 @@
+# University Enrollment System - Microservices Architecture
+
+A fully containerized, scalable microservices application built with **FastAPI**, **SQLite**, and **Docker**. This project demonstrates domain-driven decomposition, API gateway routing, horizontal scalability, and fault-tolerant inter-service communication.
+
+---
+
+# Architecture Overview
+
+The system is decomposed into **three core business services** and **one API Gateway**, all running in isolated Docker containers communicating over an internal Docker bridge network.
+
+## Services
+
+<p align="center">
+  <img src="./Architecture.png" alt="University Enrollment System Architecture" width="900">
+</p>
+
+---
+
+# Key Architectural Patterns
+
+- **Database-per-Service**
+  - Complete data isolation.
+  - No shared databases.
+
+- **URI Versioning**
+  - Endpoints are versioned (e.g., `/api/v1/students`) for future-proofing.
+
+- **Fault Isolation**
+  - Services gracefully handle upstream failures by returning **`503 Service Unavailable`** instead of crashing.
+
+- **Ephemeral Ports**
+  - Internal services do not bind to static host ports, allowing seamless horizontal scaling.
+
+---
+
+# Quick Start (Docker)
+
+## Prerequisites
+
+Ensure you have **Docker Desktop** installed and the Docker Engine is running.
+
+## 1. Clone the Repository
+
+```bash
+git clone <your-master-repo-url>
+cd SS
+```
+
+## 2. Build and Start the Application
+
+```bash
+docker compose up -d --build
+```
+
+This command will:
+
+- Build all service images from their respective `Dockerfile`s.
+- Create the Docker network.
+- Launch all containers in detached mode.
+
+## 3. Stop the Application
+
+```bash
+docker compose down
+```
+
+---
+
+# Horizontal Scaling
+
+Because the architecture utilizes an API Gateway and avoids hardcoded host ports, individual services can be scaled independently.
+
+For example, to scale the **Student Service** to **3 instances**:
+
+```bash
+docker compose up -d --scale student-service=3
+```
+
+To verify the running containers and their dynamically assigned ports:
+
+```bash
+docker ps
+```
+
+---
+
+# Testing the API
+
+Once the Docker network is running, all requests should be routed through the API Gateway:
+
+**Base URL**
+
+```
+http://127.0.0.1:8080
+```
+
+## Option 1: Automated Integration Testing
+
+This project includes a `demo.http` file in the repository root.
+
+If you're using **Visual Studio Code** with the **REST Client** extension:
+
+1. Open `demo.http`.
+2. Click **Send Request** for each request.
+3. Execute the complete integration test sequence.
+
+## Option 2: Interactive API Documentation
+
+FastAPI automatically generates Swagger documentation.
+
+Open the following URL in your browser:
+
+```
+http://127.0.0.1:8080/docs
+```
+
+---
+
+# Project Structure
+
+Each service is designed to operate as a completely independent repository. Navigate into the respective folders for service-specific documentation.
+
+```text
+.
+├── api-gateway/            # Routing & Reverse Proxy
+├── course-service/         # Course domain logic & database
+├── enrollment-service/     # Enrollment domain logic & database
+├── student-service/        # Student domain logic & database
+├── docker-compose.yml      # Master container orchestration
+├── demo.http               # End-to-end API testing script
+└── README.md               # Project documentation
+```
